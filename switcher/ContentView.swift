@@ -103,10 +103,44 @@ class AppViewModel: ObservableObject {
             switchToApp(selectedApp.bundleIdentifier)
         }
     }
+    
+    func cycleToPreviousApp() {
+        // Get apps for current category
+        guard let currentCategoryApps = appsByCategory[selectedCategory] else { return }
+        
+        selectedAppIndex -= 1
+        
+        // If we've reached the start of apps in current category
+        if selectedAppIndex < 0 {
+            // Move to previous category
+            let categories = AppCategory.allCases
+            if let currentIndex = categories.firstIndex(of: selectedCategory) {
+                let previousIndex = (currentIndex - 1 + categories.count) % categories.count
+                selectedCategory = categories[previousIndex]
+                
+                // Set index to last app in the new category
+                if let previousCategoryApps = appsByCategory[selectedCategory] {
+                    selectedAppIndex = previousCategoryApps.count - 1
+                } else {
+                    selectedAppIndex = 0
+                }
+            }
+        }
+        
+        // Switch to the selected app
+        if let currentCategoryApps = appsByCategory[selectedCategory],
+           selectedAppIndex >= 0 && selectedAppIndex < currentCategoryApps.count {
+            let selectedApp = currentCategoryApps[selectedAppIndex]
+            switchToApp(selectedApp.bundleIdentifier)
+        }
+    }
 }
 
 struct ContentView: View {
     @ObservedObject var viewModel: AppViewModel
+    
+    @Namespace private var namespace
+    @State private var scrollTarget: Int?
     
     init(viewModel: AppViewModel) {
         self.viewModel = viewModel
@@ -114,7 +148,6 @@ struct ContentView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Category selector
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(AppCategory.allCases, id: \.self) { category in
@@ -134,29 +167,36 @@ struct ContentView: View {
             }
             .padding(.vertical, 8)
             
-            // Apps grid with selection highlight
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: [GridItem(.fixed(60))], spacing: 16) {
-                    if let apps = viewModel.appsByCategory[viewModel.selectedCategory] {
-                        ForEach(Array(apps.enumerated()), id: \.element.id) { index, app in
-                            VStack {
-                                Image(nsImage: app.icon)
-                                    .resizable()
-                                    .frame(width: 32, height: 32)
-                                Text(app.name)
-                                    .font(.caption)
-                                    .lineLimit(1)
-                            }
-                            .frame(width: 60)
-                            .background(index == viewModel.selectedAppIndex ? Color.blue.opacity(0.3) : Color.clear)
-                            .cornerRadius(8)
-                            .onTapGesture {
-                                viewModel.switchToApp(app.bundleIdentifier)
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHGrid(rows: [GridItem(.fixed(60))], spacing: 16) {
+                        if let apps = viewModel.appsByCategory[viewModel.selectedCategory] {
+                            ForEach(Array(apps.enumerated()), id: \.element.id) { index, app in
+                                VStack {
+                                    Image(nsImage: app.icon)
+                                        .resizable()
+                                        .frame(width: 32, height: 32)
+                                    Text(app.name)
+                                        .font(.caption)
+                                        .lineLimit(1)
+                                }
+                                .frame(width: 60)
+                                .background(index == viewModel.selectedAppIndex ? Color.blue.opacity(0.3) : Color.clear)
+                                .cornerRadius(8)
+                                .id(index)
+                                .onTapGesture {
+                                    viewModel.switchToApp(app.bundleIdentifier)
+                                }
                             }
                         }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
+                .onChange(of: viewModel.selectedAppIndex) { newIndex in
+                    withAnimation {
+                        proxy.scrollTo(newIndex, anchor: .center)
+                    }
+                }
             }
         }
         .background(Color(NSColor.windowBackgroundColor))

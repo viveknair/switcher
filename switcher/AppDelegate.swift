@@ -16,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var hostingView: NSHostingView<ContentView>!
   private var appViewModel = AppViewModel()
   private var switcherHotKey: HotKey?
+  private var backwardSwitcherHotKey: HotKey?
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     print("App launched, initializing...")
@@ -63,12 +64,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   private func setupHotKey() {
-    // Create a hot key for option + tab
+    // Create hot keys for both option+tab and option+shift+tab
     switcherHotKey = HotKey(key: .tab, modifiers: [.option])
+    backwardSwitcherHotKey = HotKey(key: .tab, modifiers: [.option, .shift])
     
-    // Handle key down - show panel and cycle apps
+    // Handle option+tab - show panel and cycle forward
     switcherHotKey?.keyDownHandler = { [weak self] in
-        self?.handleOptionTab()
+        print("Forward cycle")
+        self?.handleOptionTab(direction: .forward)
+    }
+    
+    // Handle option+shift+tab - show panel and cycle backward
+    backwardSwitcherHotKey?.keyDownHandler = { [weak self] in
+        print("Backward cycle")
+        self?.handleOptionTab(direction: .backward)
     }
     
     // Monitor for option key up specifically
@@ -79,16 +88,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    // Remove the original keyUpHandler as we don't want to hide on tab release
+    // Remove the keyUpHandlers as we don't want to hide on tab release
     switcherHotKey?.keyUpHandler = nil
+    backwardSwitcherHotKey?.keyUpHandler = nil
   }
   
-  private func handleOptionTab() {
-    print("Handling Option + Tab")
+  private enum CycleDirection {
+    case forward
+    case backward
+  }
+  
+  private func handleOptionTab(direction: CycleDirection) {
+    print("Handling Option + Tab with direction: \(direction)")
     if !appSwitcherPanel.isVisible {
       showPanel()
     }
-    appViewModel.cycleToNextApp()
+    switch direction {
+    case .forward:
+      appViewModel.cycleToNextApp()
+    case .backward:
+      appViewModel.cycleToPreviousApp()
+    }
   }
   
   private func showPanel() {
