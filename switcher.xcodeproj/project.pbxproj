@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A94D5B772D1BD13700CC2582 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = A94D5B762D1BD13700CC2582 /* HotKey */; };
 		A96E9A4E281B607B009FE51C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E9A4D281B607B009FE51C /* AppDelegate.swift */; };
 		A96E9A50281B607B009FE51C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E9A4F281B607B009FE51C /* ViewController.swift */; };
 		A96E9A52281B607C009FE51C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A96E9A51281B607C009FE51C /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 		A984F2D22D1BCA2100E84CA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		A984F2D32D1BCA6B00E84CA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A984F2D52D1BCAC400E84CA4 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		A984F2D72D1BCFC400E84CA4 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A94D5B772D1BD13700CC2582 /* HotKey in Frameworks */,
 				A96E9A64281B6499009FE51C /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,6 +56,7 @@
 				A984F2D22D1BCA2100E84CA4 /* .gitignore */,
 				A984F2D32D1BCA6B00E84CA4 /* README.md */,
 				A984F2D52D1BCAC400E84CA4 /* LICENSE */,
+				A984F2D72D1BCFC400E84CA4 /* Package.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,6 +100,7 @@
 			name = switcher;
 			packageProductDependencies = (
 				A96E9A63281B6499009FE51C /* KeyboardShortcuts */,
+				A94D5B762D1BD13700CC2582 /* HotKey */,
 			);
 			productName = switcher;
 			productReference = A96E9A4A281B607B009FE51C /* switcher.app */;
@@ -127,6 +132,7 @@
 			mainGroup = A96E9A41281B607B009FE51C;
 			packageReferences = (
 				A96E9A62281B6499009FE51C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+				A94D5B752D1BD13700CC2582 /* XCRemoteSwiftPackageReference "HotKey" */,
 			);
 			productRefGroup = A96E9A4B281B607B009FE51C /* Products */;
 			projectDirPath = "";
@@ -367,6 +373,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A94D5B752D1BD13700CC2582 /* XCRemoteSwiftPackageReference "HotKey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/soffes/HotKey";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		A96E9A62281B6499009FE51C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
@@ -378,6 +392,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A94D5B762D1BD13700CC2582 /* HotKey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A94D5B752D1BD13700CC2582 /* XCRemoteSwiftPackageReference "HotKey" */;
+			productName = HotKey;
+		};
 		A96E9A63281B6499009FE51C /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A96E9A62281B6499009FE51C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
