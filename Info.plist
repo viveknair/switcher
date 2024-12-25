@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.viveknair.switcher</string>
+    <key>CFBundleName</key>
+    <string>Switcher</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>This app needs to monitor keyboard events to provide app switching functionality.</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>This app needs accessibility access to monitor keyboard shortcuts for app switching.</string>
+    <key>LSUIElement</key>
+    <true/>
+</dict>
+</plist>

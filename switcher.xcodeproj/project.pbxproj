@@ -11,6 +11,10 @@
 		A96E9A50281B607B009FE51C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E9A4F281B607B009FE51C /* ViewController.swift */; };
 		A96E9A52281B607C009FE51C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A96E9A51281B607C009FE51C /* Assets.xcassets */; };
 		A96E9A55281B607C009FE51C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A96E9A53281B607C009FE51C /* Main.storyboard */; };
+		A96E9A5D281B6188009FE51C /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E9A5C281B6188009FE51C /* FloatingPanel.swift */; };
+		A96E9A61281B62ED009FE51C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E9A60281B62ED009FE51C /* ContentView.swift */; };
+		A96E9A64281B6499009FE51C /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = A96E9A63281B6499009FE51C /* KeyboardShortcuts */; };
+		A984F2D62D1BCAC400E84CA4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = A984F2D52D1BCAC400E84CA4 /* LICENSE */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +24,12 @@
 		A96E9A51281B607C009FE51C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A96E9A54281B607C009FE51C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A96E9A56281B607C009FE51C /* switcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = switcher.entitlements; sourceTree = "<group>"; };
+		A96E9A5C281B6188009FE51C /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
+		A96E9A60281B62ED009FE51C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A984F2D12D1BC58D00E84CA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A984F2D22D1BCA2100E84CA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		A984F2D32D1BCA6B00E84CA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		A984F2D52D1BCAC400E84CA4 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A96E9A64281B6499009FE51C /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,8 +47,12 @@
 		A96E9A41281B607B009FE51C = {
 			isa = PBXGroup;
 			children = (
+				A984F2D12D1BC58D00E84CA4 /* Info.plist */,
 				A96E9A4C281B607B009FE51C /* switcher */,
 				A96E9A4B281B607B009FE51C /* Products */,
+				A984F2D22D1BCA2100E84CA4 /* .gitignore */,
+				A984F2D32D1BCA6B00E84CA4 /* README.md */,
+				A984F2D52D1BCAC400E84CA4 /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,6 +72,8 @@
 				A96E9A51281B607C009FE51C /* Assets.xcassets */,
 				A96E9A53281B607C009FE51C /* Main.storyboard */,
 				A96E9A56281B607C009FE51C /* switcher.entitlements */,
+				A96E9A5C281B6188009FE51C /* FloatingPanel.swift */,
+				A96E9A60281B62ED009FE51C /* ContentView.swift */,
 			);
 			path = switcher;
 			sourceTree = "<group>";
@@ -77,6 +94,9 @@
 			dependencies = (
 			);
 			name = switcher;
+			packageProductDependencies = (
+				A96E9A63281B6499009FE51C /* KeyboardShortcuts */,
+			);
 			productName = switcher;
 			productReference = A96E9A4A281B607B009FE51C /* switcher.app */;
 			productType = "com.apple.product-type.application";
@@ -105,6 +125,9 @@
 				Base,
 			);
 			mainGroup = A96E9A41281B607B009FE51C;
+			packageReferences = (
+				A96E9A62281B6499009FE51C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+			);
 			productRefGroup = A96E9A4B281B607B009FE51C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -119,6 +142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A984F2D62D1BCAC400E84CA4 /* LICENSE in Resources */,
 				A96E9A52281B607C009FE51C /* Assets.xcassets in Resources */,
 				A96E9A55281B607C009FE51C /* Main.storyboard in Resources */,
 			);
@@ -133,6 +157,8 @@
 			files = (
 				A96E9A50281B607B009FE51C /* ViewController.swift in Sources */,
 				A96E9A4E281B607B009FE51C /* AppDelegate.swift in Sources */,
+				A96E9A61281B62ED009FE51C /* ContentView.swift in Sources */,
+				A96E9A5D281B6188009FE51C /* FloatingPanel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +298,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y88U4QXK53;
+				DEVELOPMENT_TEAM = 6L2MW3QX4J;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -299,7 +325,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y88U4QXK53;
+				DEVELOPMENT_TEAM = 6L2MW3QX4J;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -339,6 +365,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A96E9A62281B6499009FE51C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A96E9A63281B6499009FE51C /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96E9A62281B6499009FE51C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A96E9A42281B607B009FE51C /* Project object */;
 }
