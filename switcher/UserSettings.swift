@@ -1,35 +1,43 @@
 import Foundation
 
-public enum UserSettings {
-    @UserDefault("initialRepeatDelay", defaultValue: 0.5)
-    public static var initialRepeatDelay: Double
+enum UserSettings {
+    enum Keys {
+        static let openAIApiKey = "openAIApiKey"
+        static let initialRepeatDelay = "initialRepeatDelay"
+        static let repeatInterval = "repeatInterval"
+        static let windowWidth = "windowWidth"
+        static let windowHeight = "windowHeight"
+    }
     
-    @UserDefault("repeatInterval", defaultValue: 0.2) // 5 FPS
-    public static var repeatInterval: Double
-    
-    @UserDefault("windowWidth", defaultValue: 600.0)
-    public static var windowWidth: Double
-    
-    @UserDefault("windowHeight", defaultValue: 160.0)
-    public static var windowHeight: Double
-    
-    @UserDefault("openAIApiKey", defaultValue: "")
+    @UserDefault(key: Keys.openAIApiKey, defaultValue: "")
     static var openAIApiKey: String
+    
+    @UserDefault(key: Keys.initialRepeatDelay, defaultValue: 0.5)
+    static var initialRepeatDelay: Double
+    
+    @UserDefault(key: Keys.repeatInterval, defaultValue: 0.2)
+    static var repeatInterval: Double
+    
+    @UserDefault(key: Keys.windowWidth, defaultValue: 600.0)
+    static var windowWidth: Double
+    
+    @UserDefault(key: Keys.windowHeight, defaultValue: 300.0)
+    static var windowHeight: Double
 }
 
 @propertyWrapper
-public struct UserDefault<T> {
+struct UserDefault<T> {
     let key: String
     let defaultValue: T
     
-    public init(_ key: String, defaultValue: T) {
+    init(key: String, defaultValue: T) {
         self.key = key
         self.defaultValue = defaultValue
     }
     
-    public var wrappedValue: T {
+    var wrappedValue: T {
         get {
-            UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+            return UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
         }
         set {
             UserDefaults.standard.set(newValue, forKey: key)
