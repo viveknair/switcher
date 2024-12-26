@@ -22,6 +22,23 @@ class AppViewModel: ObservableObject {
         self.categorizer = AppCategorizer()
         Task { @MainActor in
             await loadAndCategorizeApps()
+            // Set initial selection to current active app
+            setInitialSelection()
+        }
+    }
+    
+    private func setInitialSelection() {
+        // Get the frontmost app
+        if let frontApp = NSWorkspace.shared.frontmostApplication,
+           let frontBundleId = frontApp.bundleIdentifier {
+            // Find which category contains this app
+            for (category, apps) in appsByCategory {
+                if let index = apps.firstIndex(where: { $0.bundleIdentifier == frontBundleId }) {
+                    selectedCategory = category
+                    selectedAppIndex = index
+                    break
+                }
+            }
         }
     }
     
@@ -79,7 +96,22 @@ class AppViewModel: ObservableObject {
     
     func loadApps() {
         Task { @MainActor in
+            let currentAppId = currentSelectedApp?.bundleIdentifier
             await updateRunningApps()
+            
+            // Try to maintain selection of current app if it still exists
+            if let currentAppId = currentAppId {
+                for (category, apps) in appsByCategory {
+                    if let index = apps.firstIndex(where: { $0.bundleIdentifier == currentAppId }) {
+                        selectedCategory = category
+                        selectedAppIndex = index
+                        return
+                    }
+                }
+            }
+            
+            // If we couldn't maintain selection, set to current frontmost app
+            setInitialSelection()
         }
     }
     
