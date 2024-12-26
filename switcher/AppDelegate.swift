@@ -19,10 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var backwardSwitcherHotKey: HotKey?
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    print("App launched, initializing...")
-    
     if !AXIsProcessTrusted() {
-      print("Requesting accessibility permissions...")
       let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
       AXIsProcessTrustedWithOptions(options as CFDictionary)
     }
@@ -37,8 +34,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     if let window = NSApp.windows.first {
         window.close()
     }
-    
-    print("Initialization complete")
   }
 
   func applicationWillTerminate(_ aNotification: Notification) {
@@ -49,7 +44,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   private func createFloatingPanel() {
-    print("Creating floating panel")
     // Create the window
     appSwitcherPanel = FloatingPanel(contentRect: NSRect(x: 0, y: 0, width: 600, height: 160), backing: .buffered, defer: false)
 
@@ -60,7 +54,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // Initial hide
     appSwitcherPanel.orderOut(nil)
-    print("Floating panel created successfully")
   }
   
   private func setupHotKey() {
@@ -70,13 +63,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // Handle option+tab - show panel and cycle forward
     switcherHotKey?.keyDownHandler = { [weak self] in
-        print("Forward cycle")
         self?.handleOptionTab(direction: .forward)
     }
     
     // Handle option+shift+tab - show panel and cycle backward
     backwardSwitcherHotKey?.keyDownHandler = { [weak self] in
-        print("Backward cycle")
         self?.handleOptionTab(direction: .backward)
     }
     
@@ -99,20 +90,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   private func handleOptionTab(direction: CycleDirection) {
-    print("Handling Option + Tab with direction: \(direction)")
     if !appSwitcherPanel.isVisible {
-      showPanel()
+        showPanel()
     }
     switch direction {
     case .forward:
-      appViewModel.cycleToNextApp()
+        appViewModel.cycleToNextApp()
     case .backward:
-      appViewModel.cycleToPreviousApp()
+        appViewModel.cycleToPreviousApp()
     }
   }
   
   private func showPanel() {
-    print("Showing panel")
     appSwitcherPanel.center()
     appSwitcherPanel.orderFront(nil)
     appSwitcherPanel.makeKey()
@@ -120,20 +109,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   private func hidePanel() {
-    print("Hiding panel")
     appSwitcherPanel.orderOut(nil)
   }
   
   private func togglePanel() {
     if appSwitcherPanel.isVisible {
-      print("Hiding panel")
-      appSwitcherPanel.orderOut(nil)
+        appSwitcherPanel.orderOut(nil)
     } else {
-      print("Showing panel")
-      // Center the panel before showing it
-      appSwitcherPanel.center()
-      appSwitcherPanel.orderFront(nil)
-      appSwitcherPanel.makeKey()
+        // Center the panel before showing it
+        appSwitcherPanel.center()
+        appSwitcherPanel.orderFront(nil)
+        appSwitcherPanel.makeKey()
     }
   }
 }

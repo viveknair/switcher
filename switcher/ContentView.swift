@@ -34,7 +34,9 @@ class AppViewModel: ObservableObject {
         let workspace = NSWorkspace.shared
         let runningApps = workspace.runningApplications
         
-        // Reset apps array
+        // Reset apps array and appsByCategory
+        appsByCategory = [:] // Clear the dictionary first
+        
         apps = runningApps
             .filter { $0.activationPolicy == .regular }
             .compactMap { app in
@@ -57,7 +59,11 @@ class AppViewModel: ObservableObject {
     }
     
     private func categorizeApp(bundleId: String) -> AppCategory {
-        switch bundleId.lowercased() {
+        // Convert to lowercase once to avoid multiple conversions
+        let lowercaseBundleId = bundleId.lowercased()
+        
+        // Use more specific bundle ID checks
+        switch lowercaseBundleId {
         case let id where id.contains("xcode"):
             return .development
         case let id where id.contains("visual") || id.contains("android"):
@@ -66,7 +72,8 @@ class AppViewModel: ObservableObject {
             return .communication
         case let id where id.contains("spotify") || id.contains("music") || id.contains("netflix"):
             return .media
-        case let id where id.contains("word") || id.contains("excel") || id.contains("notes"):
+        case let id where id.contains("notes.app") || id.contains("microsoft.word") || 
+                         id.contains("microsoft.excel") || id.contains("microsoft.powerpoint"):
             return .productivity
         default:
             return .other
@@ -81,19 +88,17 @@ class AppViewModel: ObservableObject {
     
     func cycleToNextApp() {
         // Get apps for current category
-        guard let currentCategoryApps = appsByCategory[selectedCategory] else { return }
+        guard let currentCategoryApps = appsByCategory[selectedCategory] else { 
+            moveToNextCategoryWithApps()
+            return 
+        }
         
         selectedAppIndex += 1
         
         // If we've reached the end of apps in current category
         if selectedAppIndex >= currentCategoryApps.count {
             selectedAppIndex = 0
-            // Move to next category
-            let categories = AppCategory.allCases
-            if let currentIndex = categories.firstIndex(of: selectedCategory) {
-                let nextIndex = (currentIndex + 1) % categories.count
-                selectedCategory = categories[nextIndex]
-            }
+            moveToNextCategoryWithApps()
         }
         
         // Switch to the selected app
@@ -104,27 +109,42 @@ class AppViewModel: ObservableObject {
         }
     }
     
+    private func moveToNextCategoryWithApps() {
+        let categories = AppCategory.allCases
+        guard let currentIndex = categories.firstIndex(of: selectedCategory) else { return }
+        
+        var nextIndex = (currentIndex + 1) % categories.count
+        let startIndex = currentIndex
+        
+        // Keep looking until we find a category with apps or we've checked all categories
+        while nextIndex != startIndex {
+            let nextCategory = categories[nextIndex]
+            if let nextCategoryApps = appsByCategory[nextCategory], !nextCategoryApps.isEmpty {
+                selectedCategory = nextCategory
+                selectedAppIndex = 0
+                return
+            }
+            nextIndex = (nextIndex + 1) % categories.count
+        }
+        
+        // If we've checked all categories and found none with apps, stay in current category
+        if let currentCategoryApps = appsByCategory[selectedCategory], !currentCategoryApps.isEmpty {
+            selectedAppIndex = 0
+        }
+    }
+    
     func cycleToPreviousApp() {
         // Get apps for current category
-        guard let currentCategoryApps = appsByCategory[selectedCategory] else { return }
+        guard let currentCategoryApps = appsByCategory[selectedCategory] else { 
+            moveToPreviousCategoryWithApps()
+            return 
+        }
         
         selectedAppIndex -= 1
         
         // If we've reached the start of apps in current category
         if selectedAppIndex < 0 {
-            // Move to previous category
-            let categories = AppCategory.allCases
-            if let currentIndex = categories.firstIndex(of: selectedCategory) {
-                let previousIndex = (currentIndex - 1 + categories.count) % categories.count
-                selectedCategory = categories[previousIndex]
-                
-                // Set index to last app in the new category
-                if let previousCategoryApps = appsByCategory[selectedCategory] {
-                    selectedAppIndex = previousCategoryApps.count - 1
-                } else {
-                    selectedAppIndex = 0
-                }
-            }
+            moveToPreviousCategoryWithApps()
         }
         
         // Switch to the selected app
@@ -132,6 +152,30 @@ class AppViewModel: ObservableObject {
            selectedAppIndex >= 0 && selectedAppIndex < currentCategoryApps.count {
             let selectedApp = currentCategoryApps[selectedAppIndex]
             switchToApp(selectedApp.bundleIdentifier)
+        }
+    }
+    
+    private func moveToPreviousCategoryWithApps() {
+        let categories = AppCategory.allCases
+        guard let currentIndex = categories.firstIndex(of: selectedCategory) else { return }
+        
+        var previousIndex = (currentIndex - 1 + categories.count) % categories.count
+        let startIndex = currentIndex
+        
+        // Keep looking until we find a category with apps or we've checked all categories
+        while previousIndex != startIndex {
+            let previousCategory = categories[previousIndex]
+            if let previousCategoryApps = appsByCategory[previousCategory], !previousCategoryApps.isEmpty {
+                selectedCategory = previousCategory
+                selectedAppIndex = previousCategoryApps.count - 1  // Set to last app in category
+                return
+            }
+            previousIndex = (previousIndex - 1 + categories.count) % categories.count
+        }
+        
+        // If we've checked all categories and found none with apps, stay in current category
+        if let currentCategoryApps = appsByCategory[selectedCategory], !currentCategoryApps.isEmpty {
+            selectedAppIndex = currentCategoryApps.count - 1
         }
     }
 }
@@ -158,7 +202,10 @@ struct ContentView: View {
                                 .background(viewModel.selectedCategory == category ? Color.blue : Color.clear)
                                 .cornerRadius(8)
                                 .onTapGesture {
-                                    viewModel.selectedCategory = category
+                                    withAnimation {
+                                        viewModel.selectedCategory = category
+                                        viewModel.selectedAppIndex = 0  // Reset index when changing category
+                                    }
                                 }
                         }
                     }
@@ -191,6 +238,7 @@ struct ContentView: View {
                         }
                     }
                     .padding(.horizontal)
+                    .id(viewModel.selectedCategory) // Add an ID to force refresh when category changes
                 }
                 .onChange(of: viewModel.selectedAppIndex) { newIndex in
                     withAnimation {
