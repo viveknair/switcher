@@ -21,6 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppCategorizerDelegate {
   private var preferencesWindow: NSWindow?
   private var hotkeyManager: HotkeyManager!
   private var appCategorizer: AppCategorizer!
+  private var isHandlingOurOwnSwitch = false
   
   override init() {
     let panel = FloatingPanel(
@@ -136,25 +137,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppCategorizerDelegate {
   
   func hidePanel() {
     appSwitcherPanel.orderOut(nil)
-    if let bundleId = appViewModel.currentSelectedApp?.bundleIdentifier {
+    if isHandlingOurOwnSwitch, let bundleId = appViewModel.currentSelectedApp?.bundleIdentifier {
       appViewModel.switchToApp(bundleId)
     }
+    isHandlingOurOwnSwitch = false
   }
   
   func cycleToNextApp() {
     Task { @MainActor in
+      isHandlingOurOwnSwitch = true
       await appViewModel.cycleToNextApp()
     }
   }
   
   func cycleToPreviousApp() {
     Task { @MainActor in
+      isHandlingOurOwnSwitch = true
       await appViewModel.cycleToPreviousApp()
     }
   }
   
   func jumpToNextCategory() {
     Task { @MainActor in
+      isHandlingOurOwnSwitch = true
       await appViewModel.jumpToNextCategory()
     }
   }
