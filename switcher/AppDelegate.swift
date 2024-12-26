@@ -17,6 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var appViewModel = AppViewModel()
   private var switcherHotKey: HotKey?
   private var backwardSwitcherHotKey: HotKey?
+  private var categoryHotKey: HotKey?
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     if !AXIsProcessTrusted() {
@@ -57,9 +58,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   private func setupHotKey() {
-    // Create hot keys for both option+tab and option+shift+tab
+    // Create hot keys for option+tab, option+shift+tab, and option+ctrl
     switcherHotKey = HotKey(key: .tab, modifiers: [.option])
     backwardSwitcherHotKey = HotKey(key: .tab, modifiers: [.option, .shift])
+    categoryHotKey = HotKey(key: .space, modifiers: [.option, .control])
     
     // Handle option+tab - show panel and cycle forward
     switcherHotKey?.keyDownHandler = { [weak self] in
@@ -71,6 +73,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self?.handleOptionTab(direction: .backward)
     }
     
+    // New handler for option+ctrl
+    categoryHotKey?.keyDownHandler = { [weak self] in
+        self?.handleCategoryJump()
+    }
+    
     // Monitor for option key up specifically
     NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
         // Check if option key was released
@@ -79,9 +86,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    // Remove the keyUpHandlers as we don't want to hide on tab release
+    // Remove the keyUpHandlers
     switcherHotKey?.keyUpHandler = nil
     backwardSwitcherHotKey?.keyUpHandler = nil
+    categoryHotKey?.keyUpHandler = nil
   }
   
   private enum CycleDirection {
@@ -121,5 +129,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         appSwitcherPanel.orderFront(nil)
         appSwitcherPanel.makeKey()
     }
+  }
+  
+  private func handleCategoryJump() {
+    if !appSwitcherPanel.isVisible {
+        showPanel()
+    }
+    appViewModel.jumpToNextCategory()
   }
 }

@@ -178,6 +178,30 @@ class AppViewModel: ObservableObject {
             selectedAppIndex = currentCategoryApps.count - 1
         }
     }
+    
+    func jumpToNextCategory() {
+        let categories = AppCategory.allCases
+        guard let currentIndex = categories.firstIndex(of: selectedCategory) else { return }
+        
+        var nextIndex = (currentIndex + 1) % categories.count
+        let startIndex = currentIndex
+        
+        // Find next category with apps
+        while nextIndex != startIndex {
+            let nextCategory = categories[nextIndex]
+            if let nextCategoryApps = appsByCategory[nextCategory], !nextCategoryApps.isEmpty {
+                selectedCategory = nextCategory
+                selectedAppIndex = 0  // Always jump to first app in category
+                
+                // Switch to the first app in the new category
+                if let firstApp = nextCategoryApps.first {
+                    switchToApp(firstApp.bundleIdentifier)
+                }
+                return
+            }
+            nextIndex = (nextIndex + 1) % categories.count
+        }
+    }
 }
 
 struct ContentView: View {
