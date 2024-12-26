@@ -262,11 +262,30 @@ struct ContentView: View {
                         }
                     }
                     .padding(.horizontal)
-                    .id(viewModel.selectedCategory) // Add an ID to force refresh when category changes
+                    .id(viewModel.selectedCategory)
                 }
                 .onChange(of: viewModel.selectedAppIndex) { newIndex in
+                    if let apps = viewModel.appsByCategory[viewModel.selectedCategory] {
+                        let threshold = 2 // How many items from the edge before we start scrolling
+                        
+                        // Scroll near end
+                        if newIndex >= apps.count - threshold {
+                            withAnimation {
+                                proxy.scrollTo(newIndex, anchor: .trailing)
+                            }
+                        }
+                        // Scroll near start
+                        else if newIndex <= threshold {
+                            withAnimation {
+                                proxy.scrollTo(newIndex, anchor: .leading)
+                            }
+                        }
+                    }
+                }
+                // Add this to handle category changes
+                .onChange(of: viewModel.selectedCategory) { _ in
                     withAnimation {
-                        proxy.scrollTo(newIndex, anchor: .center)
+                        proxy.scrollTo(viewModel.selectedAppIndex, anchor: .center)
                     }
                 }
             }

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A9421A372D1CF8BF00ECF0AA /* Settings in Frameworks */ = {isa = PBXBuildFile; productRef = A9421A362D1CF8BF00ECF0AA /* Settings */; };
+		A9421A3A2D1CFB6D00ECF0AA /* PreferencesWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9421A382D1CFB6D00ECF0AA /* PreferencesWindow.swift */; };
+		A9421A3B2D1CFB6D00ECF0AA /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9421A392D1CFB6D00ECF0AA /* UserSettings.swift */; };
 		A94D5B772D1BD13700CC2582 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = A94D5B762D1BD13700CC2582 /* HotKey */; };
 		A96E9A4E281B607B009FE51C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E9A4D281B607B009FE51C /* AppDelegate.swift */; };
 		A96E9A50281B607B009FE51C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E9A4F281B607B009FE51C /* ViewController.swift */; };
@@ -19,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A9421A382D1CFB6D00ECF0AA /* PreferencesWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindow.swift; sourceTree = "<group>"; };
+		A9421A392D1CFB6D00ECF0AA /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		A96E9A4A281B607B009FE51C /* switcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = switcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96E9A4D281B607B009FE51C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A96E9A4F281B607B009FE51C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -39,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9421A372D1CF8BF00ECF0AA /* Settings in Frameworks */,
 				A94D5B772D1BD13700CC2582 /* HotKey in Frameworks */,
 				A96E9A64281B6499009FE51C /* KeyboardShortcuts in Frameworks */,
 			);
@@ -71,6 +77,8 @@
 		A96E9A4C281B607B009FE51C /* switcher */ = {
 			isa = PBXGroup;
 			children = (
+				A9421A382D1CFB6D00ECF0AA /* PreferencesWindow.swift */,
+				A9421A392D1CFB6D00ECF0AA /* UserSettings.swift */,
 				A96E9A4D281B607B009FE51C /* AppDelegate.swift */,
 				A96E9A4F281B607B009FE51C /* ViewController.swift */,
 				A96E9A51281B607C009FE51C /* Assets.xcassets */,
@@ -101,6 +109,7 @@
 			packageProductDependencies = (
 				A96E9A63281B6499009FE51C /* KeyboardShortcuts */,
 				A94D5B762D1BD13700CC2582 /* HotKey */,
+				A9421A362D1CF8BF00ECF0AA /* Settings */,
 			);
 			productName = switcher;
 			productReference = A96E9A4A281B607B009FE51C /* switcher.app */;
@@ -133,6 +142,7 @@
 			packageReferences = (
 				A96E9A62281B6499009FE51C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				A94D5B752D1BD13700CC2582 /* XCRemoteSwiftPackageReference "HotKey" */,
+				A9421A352D1CF8BF00ECF0AA /* XCRemoteSwiftPackageReference "Preferences" */,
 			);
 			productRefGroup = A96E9A4B281B607B009FE51C /* Products */;
 			projectDirPath = "";
@@ -165,6 +175,8 @@
 				A96E9A4E281B607B009FE51C /* AppDelegate.swift in Sources */,
 				A96E9A61281B62ED009FE51C /* ContentView.swift in Sources */,
 				A96E9A5D281B6188009FE51C /* FloatingPanel.swift in Sources */,
+				A9421A3A2D1CFB6D00ECF0AA /* PreferencesWindow.swift in Sources */,
+				A9421A3B2D1CFB6D00ECF0AA /* UserSettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +385,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A9421A352D1CF8BF00ECF0AA /* XCRemoteSwiftPackageReference "Preferences" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/Preferences";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
 		A94D5B752D1BD13700CC2582 /* XCRemoteSwiftPackageReference "HotKey" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/soffes/HotKey";
@@ -392,6 +412,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A9421A362D1CF8BF00ECF0AA /* Settings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9421A352D1CF8BF00ECF0AA /* XCRemoteSwiftPackageReference "Preferences" */;
+			productName = Settings;
+		};
 		A94D5B762D1BD13700CC2582 /* HotKey */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A94D5B752D1BD13700CC2582 /* XCRemoteSwiftPackageReference "HotKey" */;

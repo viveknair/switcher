@@ -10,12 +10,13 @@ let package = Package(
         .executable(name: "switcher", targets: ["switcher"])
     ],
     dependencies: [
-        .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3")
+        .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3"),
+        .package(url: "https://github.com/sindresorhus/Settings", exact: "3.1.1")
     ],
     targets: [
         .executableTarget(
             name: "switcher",
-            dependencies: ["HotKey"],
+            dependencies: ["HotKey", "Settings"],
             path: "switcher",
             swiftSettings: [.unsafeFlags(["-suppress-warnings"])]
         )
