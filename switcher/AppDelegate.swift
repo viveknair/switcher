@@ -22,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppCategorizerDelegate {
   private var hotkeyManager: HotkeyManager!
   private var appCategorizer: AppCategorizer!
   private var isHandlingOurOwnSwitch = false
+  private var isSelectingApp = false
   
   override init() {
     let panel = FloatingPanel(
@@ -128,19 +129,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppCategorizerDelegate {
   // MARK: - AppCategorizerDelegate
   
   func showPanel() {
-    Task { @MainActor in
-      if !appSwitcherPanel.isVisible {
-        await self.showPanel()
-      }
+    isSelectingApp = true
+    if !appSwitcherPanel.isVisible {
+      centerPanel()
+      appSwitcherPanel.makeKeyAndOrderFront(nil)
     }
+    
+    // Update UI without switching apps
+    appViewModel.selectedCategory = appCategorizer.getSelectedCategory()
+    appViewModel.selectedAppIndex = appCategorizer.getSelectedAppIndex()
   }
   
   func hidePanel() {
-    appSwitcherPanel.orderOut(nil)
-    if isHandlingOurOwnSwitch, let bundleId = appViewModel.currentSelectedApp?.bundleIdentifier {
-      appViewModel.switchToApp(bundleId)
+    print("❤️ [PANEL] hidePanel called - isSelectingApp:", isSelectingApp)
+    isSelectingApp = false
+    
+    // First switch the app
+    if let bundleId = appViewModel.currentSelectedApp?.bundleIdentifier {
+        print("❤️ [PANEL] Switching to app:", bundleId)
+        appViewModel.switchToApp(bundleId)
+    } else {
+        print("❤️ [PANEL] No app selected to switch to")
     }
-    isHandlingOurOwnSwitch = false
+    
+    // Then hide the panel
+    print("❤️ [PANEL] Hiding panel")
+    appSwitcherPanel.orderOut(nil)
+  }
+  
+  func hidePanelOnly() {
+    isSelectingApp = false
+    appSwitcherPanel.orderOut(nil)
   }
   
   func cycleToNextApp() {
@@ -162,5 +181,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppCategorizerDelegate {
       isHandlingOurOwnSwitch = true
       await appViewModel.jumpToNextCategory()
     }
+  }
+  
+  private func centerPanel() {
+    guard let screen = NSScreen.main else { return }
+    
+    let screenFrame = screen.visibleFrame
+    let panelFrame = appSwitcherPanel.frame
+    
+    let newOriginX = screenFrame.midX - panelFrame.width / 2
+    let newOriginY = screenFrame.midY - panelFrame.height / 2
+    
+    appSwitcherPanel.setFrameOrigin(NSPoint(x: newOriginX, y: newOriginY))
   }
 }

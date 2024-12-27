@@ -171,9 +171,13 @@ class AppViewModel: ObservableObject {
     }
     
     func switchToApp(_ bundleId: String) {
-        NSWorkspace.shared.runningApplications
-            .first { $0.bundleIdentifier == bundleId }?
-            .activate(options: .activateIgnoringOtherApps)
+        print("✅ [APP] Attempting to switch to app:", bundleId)
+        if let app = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleId }) {
+            print("✅ [APP] Found app, activating")
+            app.activate(options: .activateIgnoringOtherApps)
+        } else {
+            print("✅ [APP] Could not find app with bundle ID:", bundleId)
+        }
     }
     
     func cycleToNextApp() {
@@ -189,13 +193,6 @@ class AppViewModel: ObservableObject {
         if selectedAppIndex >= currentCategoryApps.count {
             selectedAppIndex = 0
             moveToNextCategoryWithApps()
-        }
-        
-        // Switch to the selected app
-        if let currentCategoryApps = appsByCategory[selectedCategory],
-           selectedAppIndex < currentCategoryApps.count {
-            let selectedApp = currentCategoryApps[selectedAppIndex]
-            switchToApp(selectedApp.bundleIdentifier)
         }
     }
     
@@ -239,13 +236,6 @@ class AppViewModel: ObservableObject {
                 selectedAppIndex = previousCategoryApps.count - 1  // Set to last app in previous category
             }
         }
-        
-        // Switch to the selected app
-        if let currentCategoryApps = appsByCategory[selectedCategory],
-           selectedAppIndex >= 0 && selectedAppIndex < currentCategoryApps.count {
-            let selectedApp = currentCategoryApps[selectedAppIndex]
-            switchToApp(selectedApp.bundleIdentifier)
-        }
     }
     
     private func moveToPreviousCategoryWithApps() {
@@ -279,11 +269,6 @@ class AppViewModel: ObservableObject {
             if let nextCategoryApps = appsByCategory[nextCategory], !nextCategoryApps.isEmpty {
                 selectedCategory = nextCategory
                 selectedAppIndex = 0  // Always jump to first app in category
-                
-                // Switch to the first app in the new category
-                if let firstApp = nextCategoryApps.first {
-                    switchToApp(firstApp.bundleIdentifier)
-                }
                 return
             }
             nextIndex = (nextIndex + 1) % categories.count

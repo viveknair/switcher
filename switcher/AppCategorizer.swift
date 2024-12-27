@@ -5,9 +5,6 @@ import AppKit
 protocol AppCategorizerDelegate: AnyObject {
     func showPanel()
     func hidePanel()
-    func cycleToNextApp()
-    func cycleToPreviousApp()
-    func jumpToNextCategory()
 }
 
 class AppCategorizer {
@@ -33,6 +30,13 @@ class AppCategorizer {
     
     private var currentCategory: AppCategory = .productivity
     private var categorizedApps: [AppCategory: [String]] = [:] // Category -> [BundleId]
+    
+    // Add these properties to track selection
+    private var selectedCategory: AppCategory = .productivity
+    private var selectedAppIndex: Int = 0
+    private var currentApps: [String] {
+        return categorizedApps[selectedCategory] ?? []
+    }
     
     init() {
         updateService()
@@ -150,19 +154,55 @@ class AppCategorizer {
         categorizedApps = newCategorizedApps
     }
     
-    func moveToNextApp() {
+    func selectNextApp() {
+        let apps = currentApps
+        guard !apps.isEmpty else { return }
+        
+        selectedAppIndex = (selectedAppIndex + 1) % apps.count
         delegate?.showPanel()
-        delegate?.cycleToNextApp()
     }
     
-    func moveToPreviousApp() {
+    func selectPreviousApp() {
+        let apps = currentApps
+        guard !apps.isEmpty else { return }
+        
+        selectedAppIndex = (selectedAppIndex - 1 + apps.count) % apps.count
         delegate?.showPanel()
-        delegate?.cycleToPreviousApp()
+    }
+    
+    func switchToSelectedApp() {
+        let apps = currentApps
+        guard !apps.isEmpty, selectedAppIndex < apps.count else { return }
+        
+        let selectedBundleId = apps[selectedAppIndex]
+        activateApp(bundleId: selectedBundleId)
     }
     
     func moveToNextCategory() {
-        delegate?.showPanel()
-        delegate?.jumpToNextCategory()
+        let categories = AppCategory.allCases
+        guard let currentIndex = categories.firstIndex(of: selectedCategory) else { return }
+        
+        // Find next category that has apps
+        var nextIndex = (currentIndex + 1) % categories.count
+        while nextIndex != currentIndex {
+            let nextCategory = categories[nextIndex]
+            if let apps = categorizedApps[nextCategory], !apps.isEmpty {
+                selectedCategory = nextCategory
+                selectedAppIndex = 0
+                delegate?.showPanel()
+                return
+            }
+            nextIndex = (nextIndex + 1) % categories.count
+        }
+    }
+    
+    // Add these helper methods to expose state to the UI
+    func getSelectedCategory() -> AppCategory {
+        return selectedCategory
+    }
+    
+    func getSelectedAppIndex() -> Int {
+        return selectedAppIndex
     }
     
     private func activateApp(bundleId: String) {
